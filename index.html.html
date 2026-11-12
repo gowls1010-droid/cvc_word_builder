@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CVC Word Builder - Kids Phonics Fun!</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka for cute, bubbly, kid-friendly typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    body {
+      font-family: 'Fredoka', sans-serif;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: linear-gradient(135deg, #74ebd5 0%, #9face6 50%, #fbc2eb 100%);
+      height: 100vh;
+      width: 100vw;
+      touch-action: none;
+    }
+
+    /* Animated Background Clouds & Floating Shapes */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(-15px) translateX(10px); }
+    }
+
+    @keyframes floatReverse {
+      0%, 100% { transform: translateY(0px) translateX(0px); }
+      50% { transform: translateY(14px) translateX(-12px); }
+    }
+
+    @keyframes bounceGentle {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.03); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); box-shadow: 0 10px 0 #d97706, 0 15px 25px rgba(217, 119, 6, 0.4); }
+      50% { transform: scale(1.06); box-shadow: 0 12px 0 #d97706, 0 20px 35px rgba(217, 119, 6, 0.6); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+      70% { transform: scale(1.15) rotate(3deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    @keyframes wiggle {
+      0%, 100% { transform: rotate(0deg); }
+      25% { transform: rotate(-6deg); }
+      75% { transform: rotate(6deg); }
+    }
+
+    .animate-float-slow { animation: floatSlow 6s ease-in-out infinite; }
+    .animate-float-rev { animation: floatReverse 7s ease-in-out infinite; }
+    .animate-bounce-gentle { animation: bounceGentle 2.8s ease-in-out infinite; }
+    .animate-start-btn { animation: pulseGlow 2s ease-in-out infinite; }
+    .animate-pop-in { animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards; }
+    .animate-wiggle { animation: wiggle 0.5s ease-in-out; }
+
+    /* Tactile 3D Kid Buttons */
+    .btn-3d {
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .btn-3d:active {
+      transform: translateY(5px) !important;
+    }
+
+    /* Montessori-inspired Tactile Alphabet Tiles */
+    .letter-tile {
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.15s ease;
+      cursor: grab;
+      touch-action: none;
+    }
+    .letter-tile:hover {
+      transform: translateY(-4px) scale(1.08);
+      z-index: 20;
+    }
+    .letter-tile:active {
+      cursor: grabbing;
+      transform: scale(0.95);
+    }
+
+    /* Consonant vs Vowel Styling */
+    .tile-consonant {
+      background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+      border: 3px solid #bfdbfe;
+      box-shadow: 0 5px 0 #1d4ed8, 0 8px 14px rgba(29, 78, 216, 0.25);
+      color: #ffffff;
+      text-shadow: 0 2px 0 rgba(29, 78, 216, 0.6);
+    }
+
+    .tile-vowel {
+      background: linear-gradient(180deg, #fb7185 0%, #f43f5e 100%);
+      border: 3px solid #fecdd3;
+      box-shadow: 0 5px 0 #be123c, 0 8px 14px rgba(190, 18, 60, 0.25);
+      color: #ffffff;
+      text-shadow: 0 2px 0 rgba(190, 18, 60, 0.6);
+    }
+
+    /* Dragging Ghost Tile */
+    #drag-ghost {
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%) scale(1.18) rotate(-4deg);
+      transition: none;
+      filter: drop-shadow(0 15px 20px rgba(0, 0, 0, 0.28));
+    }
+
+    /* Center Wooden / Magnetic Board */
+    .cvc-board {
+      background: linear-gradient(180deg, #fffbeb 0%, #fef3c7 100%);
+      border: 6px solid #f59e0b;
+      box-shadow: 0 12px 0 #d97706, 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .board-slot {
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .board-slot.highlight {
+      transform: scale(1.08);
+      border-style: solid !important;
+      background-color: rgba(253, 224, 71, 0.45) !important;
+    }
+
+    /* Confetti Canvas */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body class="relative w-screen h-screen overflow-hidden flex items-center justify-center">
+
+  <!-- Confetti Celebration Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Decorative Floating Background Elements -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden z-0">
+    <!-- Cute Sun -->
+    <div class="absolute -top-8 -left-8 w-36 h-36 rounded-full bg-yellow-300 opacity-80 blur-sm animate-float-slow"></div>
+    <div class="absolute top-6 left-8 text-6xl animate-float-slow opacity-90">☀️</div>
+    <!-- Floating Clouds -->
+    <div class="absolute top-10 right-16 text-7xl opacity-80 animate-float-rev">☁️</div>
+    <div class="absolute bottom-12 left-12 text-6xl opacity-75 animate-float-rev">☁️</div>
+    <div class="absolute bottom-10 right-20 text-7xl opacity-80 animate-float-slow">🌈</div>
+    <!-- Stars -->
+    <div class="absolute top-1/4 left-12 text-3xl opacity-70 animate-bounce-gentle">⭐</div>
+    <div class="absolute top-1/3 right-12 text-3xl opacity-70 animate-bounce-gentle" style="animation-delay: 0.8s;">✨</div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- SCREEN 1: VIBRANT KIDS START SCREEN                       -->
+  <!-- ========================================================= -->
+  <div id="start-screen" class="relative z-10 w-full h-full max-w-6xl mx-auto px-6 py-4 flex flex-col items-center justify-between">
+    
+    <!-- Top Cute Animal Parade -->
+    <div class="w-full flex justify-center items-center gap-4 sm:gap-8 pt-2 sm:pt-4">
+      <div class="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md border-2 border-pink-200 flex items-center gap-3 animate-bounce-gentle">
+        <span class="text-3xl sm:text-4xl">🐱</span>
+        <span class="text-pink-500 font-bold text-lg sm:text-xl tracking-wide">c - a - t</span>
+      </div>
+      <div class="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md border-2 border-sky-200 flex items-center gap-3 animate-bounce-gentle" style="animation-delay: 0.4s;">
+        <span class="text-3xl sm:text-4xl">🐶</span>
+        <span class="text-sky-500 font-bold text-lg sm:text-xl tracking-wide">d - o - g</span>
+      </div>
+      <div class="hidden sm:flex bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full shadow-md border-2 border-amber-200 items-center gap-3 animate-bounce-gentle" style="animation-delay: 0.8s;">
+        <span class="text-3xl sm:text-4xl">🐷</span>
+        <span class="text-amber-500 font-bold text-lg sm:text-xl tracking-wide">p - i - g</span>
+      </div>
+    </div>
+
+    <!-- Center Hero Title Card -->
+    <div class="bg-white/90 backdrop-blur-md rounded-[2.5rem] p-6 sm:p-10 md:p-12 shadow-2xl border-8 border-yellow-300 max-w-3xl w-full text-center relative">
+      <!-- Corner Mascot Badges -->
+      <div class="absolute -top-8 -left-6 sm:-left-8 w-16 h-16 sm:w-20 sm:h-20 bg-rose-400 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-3xl sm:text-4xl transform -rotate-12 animate-bounce-gentle">
+        🦊
+      </div>
+      <div class="absolute -top-8 -right-6 sm:-right-8 w-16 h-16 sm:w-20 sm:h-20 bg-sky-400 rounded-full border-4 border-white shadow-lg flex items-center justify-center text-3xl sm:text-4xl transform rotate-12 animate-bounce-gentle" style="animation-delay: 0.5s;">
+        🐸
+      </div>
+
+      <div class="inline-block bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white text-sm sm:text-base font-bold px-5 py-1.5 rounded-full uppercase tracking-widest mb-3 shadow">
+        Phonics & Reading Adventure
+      </div>
+
+      <h1 class="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight mb-3 drop-shadow-sm">
+        <span class="text-rose-500">C</span><span class="text-amber-500">V</span><span class="text-sky-500">C</span>
+        <span class="text-indigo-700">Word Builder!</span>
+      </h1>
+
+      <p class="text-slate-600 text-lg sm:text-2xl font-medium max-w-xl mx-auto mb-6 leading-relaxed">
+        Drag and drop colorful letters onto the board to build fun 3-letter words and hear them speak!
+      </p>
+
+      <!-- Visual Mini Preview Blocks -->
+      <div class="flex justify-center items-center gap-3 sm:gap-4 mb-8">
+        <div class="w-14 h-16 sm:w-16 sm:h-20 rounded-2xl tile-consonant flex flex-col items-center justify-center">
+          <span class="text-3xl sm:text-4xl font-bold">b</span>
+          <span class="text-[10px] uppercase tracking-wider opacity-90">C</span>
+        </div>
+        <span class="text-2xl sm:text-3xl font-bold text-amber-400">+</span>
+        <div class="w-14 h-16 sm:w-16 sm:h-20 rounded-2xl tile-vowel flex flex-col items-center justify-center">
+          <span class="text-3xl sm:text-4xl font-bold">u</span>
+          <span class="text-[10px] uppercase tracking-wider opacity-90">V</span>
+        </div>
+        <span class="text-2xl sm:text-3xl font-bold text-amber-400">+</span>
+        <div class="w-14 h-16 sm:w-16 sm:h-20 rounded-2xl tile-consonant flex flex-col items-center justify-center">
+          <span class="text-3xl sm:text-4xl font-bold">g</span>
+          <span class="text-[10px] uppercase tracking-wider opacity-90">C</span>
+        </div>
+        <span class="text-2xl sm:text-3xl font-bold text-emerald-500">=</span>
+        <div class="px-4 py-2 bg-emerald-100 border-4 border-emerald-400 rounded-2xl flex items-center gap-2">
+          <span class="text-3xl sm:text-4xl">🐞</span>
+          <span class="text-2xl sm:text-3xl font-bold text-emerald-700">bug!</span>
+        </div>
+      </div>
+
+      <!-- Big START Button -->
+      <button id="start-btn" class="btn-3d animate-start-btn bg-gradient-to-b from-amber-300 via-amber-400 to-amber-500 hover:from-amber-200 hover:to-amber-400 text-amber-950 font-bold text-3xl sm:text-4xl px-14 py-4 sm:py-5 rounded-full border-4 border-white cursor-pointer inline-flex items-center gap-4">
+        <span>START</span>
+        <span class="text-3xl sm:text-4xl">🚀</span>
+      </button>
+    </div>
+
+    <!-- Bottom Legend Pill -->
+    <div class="flex flex-wrap justify-center items-center gap-4 bg-white/80 backdrop-blur-sm px-6 py-2.5 rounded-full shadow-md border-2 border-white">
+      <div class="flex items-center gap-2">
+        <span class="w-4 h-4 rounded-full bg-blue-500 inline-block"></span>
+        <span class="text-slate-700 font-semibold text-sm sm:text-base">Blue = Consonants</span>
+      </div>
+      <span class="text-slate-300">|</span>
+      <div class="flex items-center gap-2">
+        <span class="w-4 h-4 rounded-full bg-rose-500 inline-block"></span>
+        <span class="text-slate-700 font-semibold text-sm sm:text-base">Pink = Vowels (a, e, i, o, u)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================= -->
+  <!-- SCREEN 2: WIDESCREEN CVC LEARNING PLAYGROUND              -->
+  <!-- ========================================================= -->
+  <div id="game-screen" class="hidden relative z-10 w-full h-full max-w-[1440px] mx-auto px-3 sm:px-6 py-2 sm:py-3 flex flex-col justify-between">
+    
+    <!-- Top Control Bar -->
+    <header class="w-full flex items-center justify-between gap-2 shrink-0">
+      <!-- Home Button -->
+      <button id="home-btn" class="btn-3d bg-white hover:bg-slate-50 text-indigo-700 font-bold text-base sm:text-lg px-4 py-2 rounded-2xl border-2 border-indigo-200 shadow-[0_4px_0_#c7d2fe] flex items-center gap-2 cursor-pointer">
+        <span>🏠</span>
+        <span class="hidden sm:inline">Home</span>
+      </button>
+
+      <!-- Title & Legend Badge -->
+      <div class="flex items-center gap-3 bg-white/90 backdrop-blur-sm px-4 sm:px-6 py-1.5 rounded-full shadow-md border-2 border-yellow-300">
+        <span class="text-xl sm:text-2xl">✨</span>
+        <h2 class="text-lg sm:text-2xl font-bold text-indigo-800 tracking-wide">CVC Word Builder</h2>
+        <div class="hidden md:flex items-center gap-3 ml-3 pl-3 border-l-2 border-slate-200 text-sm font-semibold">
+          <span class="flex items-center gap-1 text-blue-600"><span class="w-3 h-3 rounded-full bg-blue-500"></span>Consonant</span>
+          <span class="flex items-center gap-1 text-rose-600"><span class="w-3 h-3 rounded-full bg-rose-500"></span>Vowel</span>
+        </div>
+      </div>
+
+      <!-- Sound & Case Controls -->
+      <div class="flex items-center gap-2">
+        <button id="case-toggle-btn" title="Toggle Uppercase / Lowercase" class="btn-3d bg-purple-100 hover:bg-purple-200 text-purple-800 font-bold text-sm sm:text-base px-3 sm:px-4 py-2 rounded-2xl border-2 border-purple-300 shadow-[0_4px_0_#d8b4fe] cursor-pointer">
+          abc / ABC
+        </button>
+        <button id="sound-toggle-btn" title="Toggle Sound" class="btn-3d bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-base sm:text-lg px-3.5 py-2 rounded-2xl border-2 border-emerald-300 shadow-[0_4px_0_#6ee7b7] cursor-pointer">
+          🔊
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Widescreen Workspace: Surrounding Alphabet + Center CVC Board -->
+    <main class="flex-1 w-full flex flex-col justify-between items-center my-1 sm:my-2 min-h-0">
+      
+      <!-- TOP ALPHABET ROW (a - i) -->
+      <div id="top-letters" class="w-full flex flex-wrap justify-center items-center gap-1.5 sm:gap-2.5 md:gap-3 py-1 shrink-0">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- MIDDLE SECTION: Left Letters + Center CVC Board + Right Letters -->
+      <div class="w-full flex-1 flex items-center justify-between gap-2 sm:gap-4 md:gap-6 min-h-0 my-1">
+        
+        <!-- LEFT ALPHABET COLUMN (j - m) -->
+        <div id="left-letters" class="flex flex-col justify-center items-center gap-2 sm:gap-3 shrink-0">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- CENTER CVC BOARD -->
+        <div class="flex-1 h-full max-h-[380px] max-w-2xl mx-auto flex flex-col items-center justify-center">
+          <div id="cvc-board" class="cvc-board w-full rounded-[2rem] p-3 sm:p-5 md:p-6 flex flex-col items-center justify-between relative">
+            
+            <!-- Word Picture / Feedback Banner -->
+            <div id="word-feedback-banner" class="w-full min-h-[48px] sm:min-h-[56px] mb-2 sm:mb-3 rounded-2xl bg-amber-100/80 border-2 border-amber-300 px-4 py-1.5 flex items-center justify-center gap-3 transition-all">
+              <span id="feedback-emoji" class="text-2xl sm:text-3xl">🌟</span>
+              <span id="feedback-text" class="text-base sm:text-xl font-bold text-amber-900 text-center">
+                Drag letters into the 3 boxes!
+              </span>
+            </div>
+
+            <!-- 3 CVC SLOTS CONTAINER -->
+            <div class="w-full flex items-center justify-center gap-3 sm:gap-5 md:gap-7 my-1">
+              
+              <!-- SLOT 0: CONSONANT -->
+              <div class="flex flex-col items-center">
+                <div data-slot="0" class="board-slot w-20 h-24 sm:w-28 sm:h-32 md:w-32 md:h-36 rounded-3xl border-4 border-dashed border-blue-400 bg-blue-50/70 flex items-center justify-center relative shadow-inner">
+                  <span class="slot-placeholder text-blue-300 font-bold text-xl sm:text-2xl pointer-events-none">C</span>
+                </div>
+                <span class="mt-1.5 text-xs sm:text-sm font-bold text-blue-600 uppercase tracking-wider">Consonant</span>
+              </div>
+
+              <!-- SLOT 1: VOWEL -->
+              <div class="flex flex-col items-center">
+                <div data-slot="1" class="board-slot w-20 h-24 sm:w-28 sm:h-32 md:w-32 md:h-36 rounded-3xl border-4 border-dashed border-rose-400 bg-rose-50/70 flex items-center justify-center relative shadow-inner">
+                  <span class="slot-placeholder text-rose-300 font-bold text-xl sm:text-2xl pointer-events-none">V</span>
+                </div>
+                <span class="mt-1.5 text-xs sm:text-sm font-bold text-rose-600 uppercase tracking-wider">Vowel</span>
+              </div>
+
+              <!-- SLOT 2: CONSONANT -->
+              <div class="flex flex-col items-center">
+                <div data-slot="2" class="board-slot w-20 h-24 sm:w-28 sm:h-32 md:w-32 md:h-36 rounded-3xl border-4 border-dashed border-blue-400 bg-blue-50/70 flex items-center justify-center relative shadow-inner">
+                  <span class="slot-placeholder text-blue-300 font-bold text-xl sm:text-2xl pointer-events-none">C</span>
+                </div>
+                <span class="mt-1.5 text-xs sm:text-sm font-bold text-blue-600 uppercase tracking-wider">Consonant</span>
+              </div>
+
+            </div>
+
+            <!-- Board Action Buttons: Listen & Reset -->
+            <div class="w-full flex flex-wrap items-center justify-center gap-3 sm:gap-5 mt-3 sm:mt-4">
+              <button id="speak-word-btn" class="btn-3d bg-gradient-to-b from-emerald-400 to-emerald-500 hover:from-emerald-300 hover:to-emerald-500 text-white font-bold text-base sm:text-xl px-5 sm:px-7 py-2.5 rounded-2xl border-2 border-emerald-200 shadow-[0_5px_0_#047857] flex items-center gap-2 cursor-pointer">
+                <span>🔊</span>
+                <span>Read Word</span>
+              </button>
+
+              <button id="reset-btn" class="btn-3d bg-gradient-to-b from-rose-400 to-rose-500 hover:from-rose-300 hover:to-rose-500 text-white font-bold text-base sm:text-xl px-5 sm:px-7 py-2.5 rounded-2xl border-2 border-rose-200 shadow-[0_5px_0_#be123c] flex items-center gap-2 cursor-pointer">
+                <span>🔄</span>
+                <span>Reset</span>
+              </button>
+            </div>
+
+          </div>
+          <!-- Helper Tip beneath board -->
+          <p class="text-white/95 drop-shadow font-semibold text-xs sm:text-sm mt-2 text-center">
+            💡 Tip: Tap a letter on the board to send it back!
+          </p>
+        </div>
+
+        <!-- RIGHT ALPHABET COLUMN (n - q) -->
+        <div id="right-letters" class="flex flex-col justify-center items-center gap-2 sm:gap-3 shrink-0">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+
+      <!-- BOTTOM ALPHABET ROW (r - z) -->
+      <div id="bottom-letters" class="w-full flex flex-wrap justify-center items-center gap-1.5 sm:gap-2.5 md:gap-3 py-1 shrink-0">
+        <!-- Populated by JS -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Floating Drag Ghost Element -->
+  <div id="drag-ghost" class="hidden w-14 h-16 sm:w-16 sm:h-20 rounded-2xl flex items-center justify-center text-3xl sm:text-4xl font-bold"></div>
+
+  <script>
+    /**
+     * ============================================================================
+     * CVC WORD BUILDER APPLICATION
+     * Designed for young children on widescreen PCs and tablets (iPads).
+     * ============================================================================
+     */
+
+    // 1. Dictionary of common child-friendly CVC words with cute emojis & phonetic hints
+    const CVC_DICTIONARY = {
+      // Short A words
+      cat: { emoji: '🐱', label: 'Cat!' },
+      bat: { emoji: '🦇', label: 'Bat!' },
+      hat: { emoji: '🎩', label: 'Hat!' },
+      mat: { emoji: '🧘', label: 'Mat!' },
+      rat: { emoji: '🐀', label: 'Rat!' },
+      sat: { emoji: '🪑', label: 'Sat!' },
+      pat: { emoji: '👋', label: 'Pat!' },
+      fat: { emoji: '🦛', label: 'Fat!' },
+      can: { emoji: '🥫', label: 'Can!' },
+      fan: { emoji: '🪭', label: 'Fan!' },
+      man: { emoji: '👨', label: 'Man!' },
+      pan: { emoji: '🍳', label: 'Pan!' },
+      van: { emoji: '🚐', label: 'Van!' },
+      ran: { emoji: '🏃', label: 'Ran!' },
+      cap: { emoji: '🧢', label: 'Cap!' },
+      map: { emoji: '🗺️', label: 'Map!' },
+      nap: { emoji: '😴', label: 'Nap!' },
+      tap: { emoji: '🚰', label: 'Tap!' },
+      lap: { emoji: '🏁', label: 'Lap!' },
+      dad: { emoji: '👨', label: 'Dad!' },
+      sad: { emoji: '😢', label: 'Sad!' },
+      mad: { emoji: '😠', label: 'Mad!' },
+      bad: { emoji: '👎', label: 'Bad!' },
+      pad: { emoji: '📝', label: 'Pad!' },
+      bag: { emoji: '🎒', label: 'Bag!' },
+      tag: { emoji: '🏷️', label: 'Tag!' },
+      rag: { emoji: '🧽', label: 'Rag!' },
+      wag: { emoji: '🐕', label: 'Wag!' },
+      jam: { emoji: '🍓', label: 'Jam!' },
+      ham: { emoji: '🍖', label: 'Ham!' },
+      ram: { emoji: '🐏', label: 'Ram!' },
+      yam: { emoji: '🍠', label: 'Yam!' },
+      cab: { emoji: '🚕', label: 'Cab!' },
+      lab: { emoji: '🔬', label: 'Lab!' },
+      wax: { emoji: '🕯️', label: 'Wax!' },
+
+      // Short E words
+      bed: { emoji: '🛏️', label: 'Bed!' },
+      red: { emoji: '🔴', label: 'Red!' },
+      fed: { emoji: '🍼', label: 'Fed!' },
+      wed: { emoji: '💒', label: 'Wed!' },
+      hen: { emoji: '🐔', label: 'Hen!' },
+      pen: { emoji: '🖊️', label: 'Pen!' },
+      ten: { emoji: '🔟', label: 'Ten!' },
+      men: { emoji: '👬', label: 'Men!' },
+      den: { emoji: '🐻', label: 'Den!' },
+      jet: { emoji: '✈️', label: 'Jet!' },
+      net: { emoji: '🥅', label: 'Net!' },
+      pet: { emoji: '🐶', label: 'Pet!' },
+      wet: { emoji: '💦', label: 'Wet!' },
+      vet: { emoji: '🩺', label: 'Vet!' },
+      set: { emoji: '🍽️', label: 'Set!' },
+      leg: { emoji: '🦵', label: 'Leg!' },
+      peg: { emoji: '📌', label: 'Peg!' },
+      beg: { emoji: '🙏', label: 'Beg!' },
+      web: { emoji: '🕸️', label: 'Web!' },
+      gem: { emoji: '💎', label: 'Gem!' },
+      yes: { emoji: '✅', label: 'Yes!' },
+
+      // Short I words
+      pig: { emoji: '🐷', label: 'Pig!' },
+      big: { emoji: '🐘', label: 'Big!' },
+      dig: { emoji: '⛏️', label: 'Dig!' },
+      wig: { emoji: '💇', label: 'Wig!' },
+      fig: { emoji: '🍈', label: 'Fig!' },
+      pin: { emoji: '📍', label: 'Pin!' },
+      bin: { emoji: '🗑️', label: 'Bin!' },
+      fin: { emoji: '🦈', label: 'Fin!' },
+      win: { emoji: '🏆', label: 'Win!' },
+      tin: { emoji: '🥫', label: 'Tin!' },
+      sit: { emoji: '🪑', label: 'Sit!' },
+      hit: { emoji: '⚾', label: 'Hit!' },
+      kit: { emoji: '🧰', label: 'Kit!' },
+      pit: { emoji: '🕳️', label: 'Pit!' },
+      fit: { emoji: '💪', label: 'Fit!' },
+      bit: { emoji: '🍪', label: 'Bit!' },
+      lip: { emoji: '👄', label: 'Lip!' },
+      zip: { emoji: '🤐', label: 'Zip!' },
+      dip: { emoji: '🥣', label: 'Dip!' },
+      hip: { emoji: '🦛', label: 'Hip!' },
+      rip: { emoji: '📄', label: 'Rip!' },
+      tip: { emoji: '💡', label: 'Tip!' },
+      sip: { emoji: '🥤', label: 'Sip!' },
+      kid: { emoji: '🧒', label: 'Kid!' },
+      lid: { emoji: '🍲', label: 'Lid!' },
+      bib: { emoji: '👶', label: 'Bib!' },
+      rib: { emoji: '🍖', label: 'Rib!' },
+      six: { emoji: '6️⃣', label: 'Six!' },
+      mix: { emoji: '🥣', label: 'Mix!' },
+      fix: { emoji: '🔧', label: 'Fix!' },
+
+      // Short O words
+      dog: { emoji: '🐶', label: 'Dog!' },
+      log: { emoji: '🪵', label: 'Log!' },
+      fog: { emoji: '🌫️', label: 'Fog!' },
+      frog: { emoji: '🐸', label: 'Frog!' },
+      hog: { emoji: '🐗', label: 'Hog!' },
+      jog: { emoji: '🏃', label: 'Jog!' },
+      box: { emoji: '📦', label: 'Box!' },
+      fox: { emoji: '🦊', label: 'Fox!' },
+      pox: { emoji: '🤒', label: 'Pox!' },
+      pot: { emoji: '🍲', label: 'Pot!' },
+      hot: { emoji: '🔥', label: 'Hot!' },
+      dot: { emoji: '⚫', label: 'Dot!' },
+      cot: { emoji: '🛏️', label: 'Cot!' },
+      lot: { emoji: '🅿️', label: 'Lot!' },
+      not: { emoji: '🚫', label: 'Not!' },
+      mop: { emoji: '🧹', label: 'Mop!' },
+      top: { emoji: ' Spinning Top!', label: 'Top!' },
+      pop: { emoji: '🍿', label: 'Pop!' },
+      hop: { emoji: '🐇', label: 'Hop!' },
+      cop: { emoji: '👮', label: 'Cop!' },
+      mom: { emoji: '👩', label: 'Mom!' },
+      sob: { emoji: '😭', label: 'Sob!' },
+      cob: { emoji: '🌽', label: 'Cob!' },
+      rob: { emoji: '🦹', label: 'Rob!' },
+      job: { emoji: '💼', label: 'Job!' },
+      pod: { emoji: '🫛', label: 'Pod!' },
+      rod: { emoji: '🎣', label: 'Rod!' },
+      nod: { emoji: '🙂', label: 'Nod!' },
+
+      // Short U words
+      sun: { emoji: '☀️', label: 'Sun!' },
+      run: { emoji: '🏃', label: 'Run!' },
+      fun: { emoji: '🎉', label: 'Fun!' },
+      bun: { emoji: '🍔', label: 'Bun!' },
+      nun: { emoji: '⛪', label: 'Nun!' },
+      bug: { emoji: '🐞', label: 'Bug!' },
+      hug: { emoji: '🤗', label: 'Hug!' },
+      mug: { emoji: '☕', label: 'Mug!' },
+      rug: { emoji: '🧶', label: 'Rug!' },
+      jug: { emoji: '🏺', label: 'Jug!' },
+      tug: { emoji: '🚢', label: 'Tug!' },
+      dug: { emoji: '⛏️', label: 'Dug!' },
+      cup: { emoji: '🥤', label: 'Cup!' },
+      pup: { emoji: '🐶', label: 'Pup!' },
+      up:  { emoji: '⬆️', label: 'Up!' },
+      bus: { emoji: '🚌', label: 'Bus!' },
+      sub: { emoji: '🥪', label: 'Sub!' },
+      tub: { emoji: '🛁', label: 'Tub!' },
+      cub: { emoji: '🐻', label: 'Cub!' },
+      rub: { emoji: '🧴', label: 'Rub!' },
+      nut: { emoji: '🥜', label: 'Nut!' },
+      cut: { emoji: '✂️', label: 'Cut!' },
+      hut: { emoji: '🛖', label: 'Hut!' },
+      gut: { emoji: '💪', label: 'Gut!' },
+      mud: { emoji: '💩', label: 'Mud!' },
+      bud: { emoji: '🌷', label: 'Bud!' },
+      gum: { emoji: '🍬', label: 'Gum!' },
+      sum: { emoji: '➕', label: 'Sum!' },
+      hum: { emoji: '🎶', label: 'Hum!' },
+      yum: { emoji: '😋', label: 'Yum!' },
+      zoo: { emoji: '🦁', label: 'Zoo!' },
+      bee: { emoji: '🐝', label: 'Bee!' },
+      see: { emoji: '👀', label: 'See!' },
+      owl: { emoji: '🦉', label: 'Owl!' },
+      cow: { emoji: '🐄', label: 'Cow!' },
+      boy: { emoji: '👦', label: 'Boy!' },
+      toy: { emoji: '🧸', label: 'Toy!' },
+      joy: { emoji: '🥳', label: 'Joy!' },
+      car: { emoji: '🚗', label: 'Car!' },
+      jar: { emoji: '🫙', label: 'Jar!' },
+      star:{ emoji: '⭐', label: 'Star!' }
+    };
+
+    // Phonetic pronunciation helper for single letters so kids hear phonics sounds cleanly
+    const LETTER_PHONICS = {
+      a: 'a', b: 'buh', c: 'kuh', d: 'duh', e: 'eh', f: 'fff', g: 'guh',
+      h: 'huh', i: 'ih', j: 'juh', k: 'kuh', l: 'lll', m: 'mmm', n: 'nnn',
+      o: 'ah', p: 'puh', q: 'kwuh', r: 'rrr', s: 'sss', t: 'tuh', u: 'uh',
+      v: 'vvv', w: 'wuh', x: 'ks', y: 'yuh', z: 'zzz'
+    };
+
+    const VOWELS = new Set(['a', 'e', 'i', 'o', 'u']);
+
+    // Layout distribution of all 26 letters around the center board
+    const TOP_LETTERS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'];
+    const LEFT_LETTERS = ['j', 'k', 'l', 'm'];
+    const RIGHT_LETTERS = ['n', 'o', 'p', 'q'];
+    const BOTTOM_LETTERS = ['r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+
+    // App State
+    const state = {
+      slots: [null, null, null], // Stores lowercase letter strings or null
+      isUppercase: false,
+      soundEnabled: true,
+      draggingLetter: null,
+      activePointerId: null
+    };
+
+    // DOM References
+    const startScreen = document.getElementById('start-screen');
+    const gameScreen = document.getElementById('game-screen');
+    const startBtn = document.getElementById('start-btn');
+    const homeBtn = document.getElementById('home-btn');
+    const resetBtn = document.getElementById('reset-btn');
+    const speakWordBtn = document.getElementById('speak-word-btn');
+    const caseToggleBtn = document.getElementById('case-toggle-btn');
+    const soundToggleBtn = document.getElementById('sound-toggle-btn');
+    const dragGhost = document.getElementById('drag-ghost');
+    const boardSlots = document.querySelectorAll('.board-slot');
+    const feedbackBanner = document.getElementById('word-feedback-banner');
+    const feedbackEmoji = document.getElementById('feedback-emoji');
+    const feedbackText = document.getElementById('feedback-text');
+
+    // Web Audio API Sound Synthesizer for cheerful tactile clicks & chimes
+    let audioCtx = null;
+    function initAudio() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) audioCtx = new AudioContext();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTone(freq, type = 'sine', duration = 0.15, delay = 0) {
+      if (!state.soundEnabled) return;
+      try {
+        initAudio();
+        if (!audioCtx) return;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime + delay);
+        
+        gain.gain.setValueAtTime(0.18, audioCtx.currentTime + delay);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + delay + duration);
+
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        osc.start(audioCtx.currentTime + delay);
+        osc.stop(audioCtx.currentTime + delay + duration);
+      } catch (e) {
+        // Ignore audio errors on restricted devices
+      }
+    }
+
+    function playPopSound() {
+      playTone(520, 'sine', 0.12, 0);
+      playTone(680, 'sine', 0.14, 0.05);
+    }
+
+    function playReturnSound() {
+      playTone(580, 'triangle', 0.12, 0);
+      playTone(390, 'triangle', 0.15, 0.06);
+    }
+
+    function playSuccessFanfare() {
+      playTone(523.25, 'triangle', 0.18, 0);     // C5
+      playTone(659.25, 'triangle', 0.18, 0.1);   // E5
+      playTone(783.99, 'triangle', 0.18, 0.2);   // G5
+      playTone(1046.50, 'triangle', 0.4, 0.3);   // C6
+    }
+
+    // Text-to-Speech Helper
+    function speakText(text, rate = 0.9, pitch = 1.15) {
+      if (!state.soundEnabled || !('speechSynthesis' in window)) return;
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = rate;
+        utterance.pitch = pitch;
+        window.speechSynthesis.speak(utterance);
+      } catch (e) {
+        // Fallback silently if speech synthesis unavailable
+      }
+    }
+
+    // Format letter according to current case setting
+    function formatLetter(letter) {
+      if (!letter) return '';
+      return state.isUppercase ? letter.toUpperCase() : letter.toLowerCase();
+    }
+
+    // Build a single outer alphabet tile (stays permanently in place!)
+    function createOuterTile(letter) {
+      const isVowel = VOWELS.has(letter);
+      const tile = document.createElement('div');
+      tile.dataset.letter = letter;
+      tile.className = `letter-tile outer-tile w-11 h-12 sm:w-14 sm:h-16 md:w-16 md:h-18 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl md:text-4xl font-bold select-none ${
+        isVowel ? 'tile-vowel' : 'tile-consonant'
+      }`;
+      tile.textContent = formatLetter(letter);
+
+      // Pointer Down initiates custom smooth drag (works identically for mouse, touch, and stylus!)
+      tile.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        startDragging(letter, e.clientX, e.clientY, e.pointerId);
+      });
+
+      return tile;
+    }
+
+    // Render all 26 surrounding alphabet tiles
+    function renderSurroundingAlphabet() {
+      const topContainer = document.getElementById('top-letters');
+      const leftContainer = document.getElementById('left-letters');
+      const rightContainer = document.getElementById('right-letters');
+      const bottomContainer = document.getElementById('bottom-letters');
+
+      topContainer.innerHTML = '';
+      leftContainer.innerHTML = '';
+      rightContainer.innerHTML = '';
+      bottomContainer.innerHTML = '';
+
+      TOP_LETTERS.forEach(l => topContainer.appendChild(createOuterTile(l)));
+      LEFT_LETTERS.forEach(l => leftContainer.appendChild(createOuterTile(l)));
+      RIGHT_LETTERS.forEach(l => rightContainer.appendChild(createOuterTile(l)));
+      BOTTOM_LETTERS.forEach(l => bottomContainer.appendChild(createOuterTile(l)));
+    }
+
+    // Start Dragging a clone of the chosen letter
+    function startDragging(letter, clientX, clientY, pointerId) {
+      initAudio();
+      state.draggingLetter = letter;
+      state.activePointerId = pointerId;
+
+      const isVowel = VOWELS.has(letter);
+      dragGhost.className = `w-16 h-20 sm:w-20 sm:h-24 rounded-2xl flex items-center justify-center text-4xl sm:text-5xl font-bold ${
+        isVowel ? 'tile-vowel' : 'tile-consonant'
+      }`;
+      dragGhost.textContent = formatLetter(letter);
+      dragGhost.style.left = `${clientX}px`;
+      dragGhost.style.top = `${clientY}px`;
+      dragGhost.classList.remove('hidden');
+
+      // Gentle pop tone and speak letter
+      playTone(440, 'sine', 0.08);
+      speakText(letter, 1.0, 1.2);
+    }
+
+    // Update Ghost Position & Highlight Hovered Slot
+    function onPointerMove(e) {
+      if (!state.draggingLetter) return;
+      e.preventDefault();
+
+      dragGhost.style.left = `${e.clientX}px`;
+      dragGhost.style.top = `${e.clientY}px`;
+
+      // Highlight slot underneath pointer
+      boardSlots.forEach(slot => {
+        const rect = slot.getBoundingClientRect();
+        const isOver =
+          e.clientX >= rect.left - 12 &&
+          e.clientX <= rect.right + 12 &&
+          e.clientY >= rect.top - 12 &&
+          e.clientY <= rect.bottom + 12;
+
+        if (isOver) {
+          slot.classList.add('highlight');
+        } else {
+          slot.classList.remove('highlight');
+        }
+      });
+    }
+
+    // Drop Letter into Slot if over one
+    function onPointerUp(e) {
+      if (!state.draggingLetter) return;
+
+      const droppedLetter = state.draggingLetter;
+      state.draggingLetter = null;
+      state.activePointerId = null;
+      dragGhost.classList.add('hidden');
+
+      let targetSlotIndex = -1;
+
+      boardSlots.forEach(slot => {
+        slot.classList.remove('highlight');
+        const rect = slot.getBoundingClientRect();
+        const isOver =
+          e.clientX >= rect.left - 14 &&
+          e.clientX <= rect.right + 14 &&
+          e.clientY >= rect.top - 14 &&
+          e.clientY <= rect.bottom + 14;
+
+        if (isOver) {
+          targetSlotIndex = parseInt(slot.dataset.slot, 10);
+        }
+      });
+
+      if (targetSlotIndex !== -1) {
+        placeLetterInSlot(targetSlotIndex, droppedLetter);
+      }
+    }
+
+    // Place a letter into one of the 3 center board slots
+    function placeLetterInSlot(slotIndex, letter) {
+      state.slots[slotIndex] = letter;
+      playPopSound();
+      renderBoardSlots(slotIndex);
+      evaluateBoardWord();
+    }
+
+    // Remove a letter from a center board slot (Click-to-return behavior)
+    function removeLetterFromSlot(slotIndex) {
+      if (!state.slots[slotIndex]) return;
+      state.slots[slotIndex] = null;
+      playReturnSound();
+      renderBoardSlots();
+      evaluateBoardWord();
+    }
+
+    // Render the 3 slots on the center CVC board
+    function renderBoardSlots(animatedSlotIndex = -1) {
+      boardSlots.forEach((slotEl) => {
+        const idx = parseInt(slotEl.dataset.slot, 10);
+        const letter = state.slots[idx];
+
+        slotEl.innerHTML = '';
+
+        if (letter) {
+          const isVowel = VOWELS.has(letter);
+          const placedTile = document.createElement('button');
+          placedTile.type = 'button';
+          placedTile.title = 'Click to send letter back';
+          placedTile.className = `w-full h-full rounded-[1.3rem] flex items-center justify-center text-5xl sm:text-6xl md:text-7xl font-bold cursor-pointer transition-transform hover:scale-105 active:scale-95 ${
+            isVowel ? 'tile-vowel' : 'tile-consonant'
+          } ${idx === animatedSlotIndex ? 'animate-pop-in' : ''}`;
+          placedTile.textContent = formatLetter(letter);
+
+          // Clicking a letter on the board returns it / clears the slot!
+          placedTile.addEventListener('click', (e) => {
+            e.stopPropagation();
+            removeLetterFromSlot(idx);
+          });
+
+          slotEl.appendChild(placedTile);
+        } else {
+          const placeholder = document.createElement('span');
+          placeholder.className = `slot-placeholder font-bold text-2xl sm:text-3xl pointer-events-none ${
+            idx === 1 ? 'text-rose-300' : 'text-blue-300'
+          }`;
+          placeholder.textContent = idx === 1 ? 'V' : 'C';
+          slotEl.appendChild(placeholder);
+        }
+      });
+    }
+
+    // Check if all 3 slots are filled, celebrate real CVC words, and read aloud
+    function evaluateBoardWord() {
+      const [c1, v, c2] = state.slots;
+      const filledCount = state.slots.filter(Boolean).length;
+
+      // Reset banner style
+      feedbackBanner.className =
+        'w-full min-h-[48px] sm:min-h-[56px] mb-2 sm:mb-3 rounded-2xl bg-amber-100/80 border-2 border-amber-300 px-4 py-1.5 flex items-center justify-center gap-3 transition-all';
+
+      if (filledCount === 0) {
+        feedbackEmoji.textContent = '🌟';
+        feedbackText.textContent = 'Drag letters into the 3 boxes!';
+        feedbackText.className = 'text-base sm:text-xl font-bold text-amber-900 text-center';
+        return;
+      }
+
+      if (filledCount < 3) {
+        const currentPreview = state.slots.map(l => (l ? formatLetter(l) : '_')).join(' ');
+        feedbackEmoji.textContent = '🧩';
+        feedbackText.textContent = `Keep going! ${currentPreview}`;
+        feedbackText.className = 'text-base sm:text-xl font-bold text-indigo-800 text-center';
+        return;
+      }
+
+      // All 3 slots are filled!
+      const rawWord = `${c1}${v}${c2}`.toLowerCase();
+      const displayWord = formatLetter(rawWord);
+      const entry = CVC_DICTIONARY[rawWord];
+
+      if (entry) {
+        // Real CVC Word Match!
+        feedbackBanner.className =
+          'w-full min-h-[48px] sm:min-h-[56px] mb-2 sm:mb-3 rounded-2xl bg-emerald-100 border-2 border-emerald-400 px-4 py-1.5 flex items-center justify-center gap-3 transition-all animate-pop-in';
+        feedbackEmoji.textContent = entry.emoji;
+        feedbackText.textContent = `Awesome! "${displayWord}" — ${entry.label}`;
+        feedbackText.className = 'text-lg sm:text-2xl font-bold text-emerald-800 text-center';
+
+        playSuccessFanfare();
+        launchConfetti();
+        setTimeout(() => {
+          speakText(`${rawWord}! Great job!`, 0.85, 1.2);
+        }, 250);
+      } else {
+        // Playful Silly / Nonsense CVC Word Blending
+        feedbackBanner.className =
+          'w-full min-h-[48px] sm:min-h-[56px] mb-2 sm:mb-3 rounded-2xl bg-sky-100 border-2 border-sky-400 px-4 py-1.5 flex items-center justify-center gap-3 transition-all animate-pop-in';
+        feedbackEmoji.textContent = '🤪';
+        feedbackText.textContent = `Silly word: "${displayWord}"!`;
+        feedbackText.className = 'text-lg sm:text-2xl font-bold text-sky-800 text-center';
+
+        setTimeout(() => {
+          speakText(rawWord, 0.82, 1.15);
+        }, 200);
+      }
+    }
+
+    // Read the current word or letters on the board aloud
+    function handleSpeakWord() {
+      initAudio();
+      const [c1, v, c2] = state.slots;
+      if (!c1 && !v && !c2) {
+        speakText('Drag letters onto the board to make a word!', 0.95, 1.15);
+        return;
+      }
+
+      if (c1 && v && c2) {
+        const word = `${c1}${v}${c2}`.toLowerCase();
+        // Sound out slowly then blend
+        speakText(`${c1}. ${v}. ${c2}. ${word}!`, 0.8, 1.15);
+      } else {
+        const letters = state.slots.filter(Boolean).join('. ');
+        speakText(letters, 0.85, 1.15);
+      }
+    }
+
+    // Reset all 3 slots on the board
+    function handleResetBoard() {
+      initAudio();
+      state.slots = [null, null, null];
+      playReturnSound();
+      renderBoardSlots();
+      evaluateBoardWord();
+
+      // Subtle wiggle animation on board
+      const board = document.getElementById('cvc-board');
+      board.classList.remove('animate-wiggle');
+      void board.offsetWidth; // trigger reflow
+      board.classList.add('animate-wiggle');
+    }
+
+    // Toggle Uppercase / Lowercase across outer tiles & board
+    function toggleLetterCase() {
+      state.isUppercase = !state.isUppercase;
+      playTone(600, 'sine', 0.1);
+      document.querySelectorAll('.outer-tile').forEach(tile => {
+        tile.textContent = formatLetter(tile.dataset.letter);
+      });
+      renderBoardSlots();
+      evaluateBoardWord();
+    }
+
+    // Toggle Sound On/Off
+    function toggleSound() {
+      state.soundEnabled = !state.soundEnabled;
+      soundToggleBtn.textContent = state.soundEnabled ? '🔊' : '🔇';
+      if (state.soundEnabled) {
+        playPopSound();
+      } else if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    // =========================================================================
+    // LIGHTWEIGHT CELEBRATION CONFETTI SYSTEM
+    // =========================================================================
+    const confettiCanvas = document.getElementById('confetti-canvas');
+    const ctx = confettiCanvas.getContext('2d');
+    let confettiParticles = [];
+    let confettiAnimId = null;
+
+    function resizeConfettiCanvas() {
+      confettiCanvas.width = window.innerWidth;
+      confettiCanvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeConfettiCanvas);
+    resizeConfettiCanvas();
+
+    function launchConfetti() {
+      const colors = ['#f43f5e', '#3b82f6', '#f59e0b', '#10b981', '#a855f7', '#ec4899'];
+      for (let i = 0; i < 65; i++) {
+        confettiParticles.push({
+          x: confettiCanvas.width / 2 + (Math.random() - 0.5) * 240,
+          y: confettiCanvas.height / 2 - 40,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 1) * 14 - 3,
+          size: Math.random() * 10 + 6,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 12,
+          life: 1.0
+        });
+      }
+      if (!confettiAnimId) {
+        animateConfetti();
+      }
+    }
+
+    function animateConfetti() {
+      ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+      confettiParticles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.35; // gravity
+        p.rotation += p.rotationSpeed;
+        p.life -= 0.015;
+
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        ctx.restore();
+      });
+
+      confettiParticles = confettiParticles.filter(p => p.life > 0);
+
+      if (confettiParticles.length > 0) {
+        confettiAnimId = requestAnimationFrame(animateConfetti);
+      } else {
+        confettiAnimId = null;
+        ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      }
+    }
+
+    // =========================================================================
+    // EVENT LISTENERS & INITIALIZATION
+    // =========================================================================
+    startBtn.addEventListener('click', () => {
+      initAudio();
+      playSuccessFanfare();
+      startScreen.classList.add('hidden');
+      gameScreen.classList.remove('hidden');
+      speakText("Let's build words!", 0.95, 1.2);
+    });
+
+    homeBtn.addEventListener('click', () => {
+      playReturnSound();
+      gameScreen.classList.add('hidden');
+      startScreen.classList.remove('hidden');
+    });
+
+    resetBtn.addEventListener('click', handleResetBoard);
+    speakWordBtn.addEventListener('click', handleSpeakWord);
+    caseToggleBtn.addEventListener('click', toggleLetterCase);
+    soundToggleBtn.addEventListener('click', toggleSound);
+
+    // Global Pointer Move & Up listeners for smooth cross-device Drag & Drop
+    window.addEventListener('pointermove', onPointerMove, { passive: false });
+    window.addEventListener('pointerup', onPointerUp);
+    window.addEventListener('pointercancel', onPointerUp);
+
+    // Initialize the app on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderSurroundingAlphabet();
+      renderBoardSlots();
+    });
+  </script>
+</body>
+</html>
